@@ -11,7 +11,7 @@ s = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>\n
 s = s.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '')
 s = s.replace('<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>', '<script>\n' + three + '\n</script>')
 s = s.replace('<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>', '<script>\n' + orbit + '\n</script>')
-assert 'https://' not in re.sub(r'<script>.*?</script>', '', s, flags=re.S), 'external ref left'
+assert not re.search(r'(src=|<link[^>]*href=)"https?://', re.sub(r'<script>.*?</script>', '', s, flags=re.S)), 'external resource left'
 head = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
 s = s.replace('<style>\n', '<style>\nbody{margin:0}[hidden]{display:none!important}\n', 1)
 i = s.index('</style>') + len('</style>')
