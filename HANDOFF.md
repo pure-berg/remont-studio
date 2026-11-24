@@ -11,6 +11,7 @@
   старый berg-creator заблокирован). Отдаётся `index.html`: самодостаточная сборка, three.js встроен.
   Обновлять так: правка `studio-room.html` → `tools/build.sh` → commit `index.html` → push. Pages обновится за ~1 мин.
   Вкладки: `#buy` (покупки), `#acoustics`, `#sofa`; виды `#plan`, `#door`.
+  Кнопка «На весь экран» (CSS-оверлей .stage.fs + Fullscreen API где есть; Esc или F; на iPhone только оверлей).
   Режим «Смотреть / Двигать» (S.edit, по умолчанию закреплено: тап показывает размеры, перетаскивание выключено).
 - Артефакт Claude: https://claude.ai/artifact/HrpQKFoUa68e8gy44D5y8q (приватный, дубль страницы).
   Обновлять: Artifact publish с `url`, перед этим `read`.

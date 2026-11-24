@@ -38,8 +38,24 @@ button,input,select{font:inherit;color:inherit}
 .views button{border:0;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
 .views button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .views.mode{top:56px}
+.fsbtn{position:absolute;top:10px;right:10px;z-index:3;display:flex;align-items:center;gap:6px;padding:7px 11px;background:var(--surface);border:1px solid var(--line);border-radius:8px;cursor:pointer;font-weight:500;color:var(--fg)}
+.fsbtn:hover{border-color:var(--accent)}
+.fsbtn svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fsbtn .i-close{display:none}
+.stage.fs .fsbtn .i-close{display:inline}.stage.fs .fsbtn .i-open{display:none}
+.fsinfo{position:absolute;left:10px;right:10px;bottom:70px;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:12.5px;color:var(--muted)}
+.fsinfo b{display:block;color:var(--fg);font-size:14px}
+.stage:not(.fs) .fsinfo{display:none}
+html.fs-on,html.fs-on body{overflow:hidden}
+.stage.fs{position:fixed;inset:0;z-index:50;height:auto;border:0;border-radius:0}
+.stage.fs .views{top:calc(10px + env(safe-area-inset-top,0px));left:calc(10px + env(safe-area-inset-left,0px))}
+.stage.fs .views.mode{top:calc(56px + env(safe-area-inset-top,0px))}
+.stage.fs .fsbtn{top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px))}
+.stage.fs .legend{top:calc(56px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px))}
+.stage.fs .hint{bottom:calc(10px + env(safe-area-inset-bottom,0px));left:calc(10px + env(safe-area-inset-left,0px));right:calc(10px + env(safe-area-inset-right,0px))}
+.stage.fs .fsinfo{bottom:calc(70px + env(safe-area-inset-bottom,0px));left:calc(10px + env(safe-area-inset-left,0px));right:auto;max-width:min(420px,calc(100% - 20px))}
 .views.mode button[aria-pressed="true"][data-edit="1"]{background:var(--warn);color:var(--surface)}
-.legend{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted)}
+.legend{position:absolute;top:56px;right:10px;display:flex;flex-direction:column;gap:4px;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted)}
 .legend label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--fg)}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
 .hint{position:absolute;left:10px;bottom:10px;right:10px;font-size:12px;color:var(--muted);pointer-events:none;text-shadow:0 0 6px var(--scene)}
@@ -119,6 +135,8 @@ button,input,select{font:inherit;color:inherit}
   .panel{overflow:visible}
   .legend{top:56px;bottom:auto}
   .tabs{position:static;box-shadow:none}
+  #fs-lab{display:none}
+  .stage.fs{height:auto}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -137,6 +155,11 @@ button,input,select{font:inherit;color:inherit}
       <button id="m-lock" data-edit="0" aria-pressed="true" title="Предметы закреплены, можно только смотреть">Смотреть</button>
       <button id="m-edit" data-edit="1" aria-pressed="false" title="Предметы можно тянуть, крутить и двигать стрелками">Двигать</button>
     </div>
+    <button class="fsbtn" id="fs" type="button" aria-pressed="false" aria-label="Открыть модель на весь экран" title="На весь экран (F)">
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path class="i-open" d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"/><path class="i-close" d="M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5"/></svg>
+      <span id="fs-lab">На весь экран</span>
+    </button>
+    <div class="fsinfo" id="fsinfo" hidden></div>
     <div class="legend">
       <label><input type="checkbox" id="refl" checked> Отражения звука</label>
       <span><i class="dot" style="background:#2fae5c"></i> закрыто панелью</span>
@@ -2164,7 +2187,8 @@ function renderChecks(R){
   $('#checks').innerHTML = computeChecks(R).map(c => `<li class="chk ${c.s}"><span class="pill">${statusLabel[c.s]}</span><div><b>${c.t}</b><span>${c.v}</span>${c.n ? `<small>${c.n}</small>` : ''}</div></li>`).join('');
 }
 function renderSel(){
-  const el = $('#sel');
+  const el = $('#sel'), fi = $('#fsinfo');
+  if (selected) { const sp0 = SPEC[selected], sz = typeof sp0.size === 'function' ? sp0.size() : sp0.size; fi.innerHTML = `<b>${sp0.name}</b>${sz}`; fi.hidden = false; } else fi.hidden = true;
   if (!selected) { el.innerHTML = `<b>Ничего</b><span class="meta">Нажми на предмет в модели или в списке ниже, чтобы увидеть размеры и расстояния. ${S.edit ? 'Режим «Двигать»: предмет можно тянуть, крутить и двигать стрелками.' : 'Предметы закреплены. Чтобы переставлять, включи «Двигать» слева вверху на модели.'}</span>`; return; }
   const sp = SPEC[selected], it = st.items[selected], size = typeof sp.size === 'function' ? sp.size() : sp.size;
   let pos = '';
@@ -2333,6 +2357,21 @@ function setEdit(on){
   setHint(); renderSel(); save();
 }
 document.querySelectorAll('.views.mode button').forEach(b => b.onclick = () => setEdit(b.dataset.edit === '1'));
+// fullscreen: CSS overlay works everywhere (incl. iPhone); the Fullscreen API is added where the browser allows it
+let fsOn = false;
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+function setFs(on){
+  fsOn = !!on;
+  stage.classList.toggle('fs', fsOn); document.documentElement.classList.toggle('fs-on', fsOn);
+  $('#fs').setAttribute('aria-pressed', String(fsOn));
+  $('#fs').setAttribute('aria-label', fsOn ? 'Свернуть модель' : 'Открыть модель на весь экран');
+  $('#fs-lab').textContent = fsOn ? 'Свернуть' : 'На весь экран';
+  if (fsOn && !fsEl()) { const r = document.documentElement, req = r.requestFullscreen || r.webkitRequestFullscreen; if (req) try { const p = req.call(r); if (p && p.catch) p.catch(() => {}); } catch(_) {} }
+  if (!fsOn && fsEl()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) try { const p = ex.call(document); if (p && p.catch) p.catch(() => {}); } catch(_) {} }
+  renderSel(); resize();
+}
+$('#fs').onclick = () => setFs(!fsOn);
+['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => { if (!fsEl() && fsOn) setFs(false); }));
 const TABS = ['model', 'buy', 'acoustics', 'sofa'];
 function setTab(t){
   TABS.forEach(k => { $('#tab-' + k).hidden = k !== t; $('#t-' + k).setAttribute('aria-selected', String(k === t)); });
@@ -2389,6 +2428,9 @@ window.addEventListener('pointerup', e => {
   down = null;
 });
 window.addEventListener('keydown', e => {
+  if (/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  if (e.key === 'Escape' && fsOn) { setFs(false); return; }
+  if (!selected && (e.key === 'f' || e.key === 'F' || e.key === 'а' || e.key === 'А')) { setFs(!fsOn); return; }
   if (!selected || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
   const sp = SPEC[selected], it = st.items[selected], step = e.shiftKey ? 0.10 : 0.01;
   if (e.key === 'Escape') { select(null); return; }
