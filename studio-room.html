@@ -34,6 +34,8 @@ button,input,select{font:inherit;color:inherit}
 .views{position:absolute;top:10px;left:10px;display:flex;gap:2px;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
 .views button{border:0;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
 .views button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.views.mode{top:56px}
+.views.mode button[aria-pressed="true"][data-edit="1"]{background:var(--warn);color:var(--surface)}
 .legend{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted)}
 .legend label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--fg)}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
@@ -100,7 +102,10 @@ button,input,select{font:inherit;color:inherit}
 .buy small.lnk{display:flex;flex-wrap:wrap;gap:4px 12px}
 .panel a{color:var(--accent);text-underline-offset:2px}
 .panel a:hover{text-decoration-thickness:2px}
-.cart li{font-size:12.5px;padding:5px 0}
+.chg h3{grid-column:1 / -1;margin:10px 0 0;font-family:var(--font-head);font-size:14px;font-weight:600}
+.chg li.h{border-top:0;padding:4px 0 0}
+.act{font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;padding:1px 6px;border-radius:4px;border:1px solid currentColor;white-space:nowrap;align-self:start}
+.act.del{color:var(--bad)} .act.add{color:var(--accent)} .act.keep{color:var(--muted)}
 .cart li.strike span:first-child{text-decoration:line-through;color:var(--muted)}
 .tick{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
 .tick li::before{content:"□ ";color:var(--muted)}
@@ -109,7 +114,7 @@ button,input,select{font:inherit;color:inherit}
   .app{height:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:auto}
   .stage{height:min(64vh,560px)}
   .panel{overflow:visible}
-  .legend{top:58px;bottom:auto}
+  .legend{top:56px;bottom:auto}
   .tabs{position:static;box-shadow:none}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -122,6 +127,10 @@ button,input,select{font:inherit;color:inherit}
       <button id="v-free" data-view="free" aria-pressed="true">3D</button>
       <button id="v-door" data-view="door" aria-pressed="false">От двери</button>
       <button id="v-plan" data-view="plan" aria-pressed="false">План</button>
+    </div>
+    <div class="views mode" role="group" aria-label="Режим">
+      <button id="m-lock" data-edit="0" aria-pressed="true" title="Предметы закреплены, можно только смотреть">Смотреть</button>
+      <button id="m-edit" data-edit="1" aria-pressed="false" title="Предметы можно тянуть, крутить и двигать стрелками">Двигать</button>
     </div>
     <div class="legend">
       <label><input type="checkbox" id="refl" checked> Отражения звука</label>
@@ -141,6 +150,7 @@ button,input,select{font:inherit;color:inherit}
       <button role="tab" id="t-model" data-tab="model" aria-selected="true" aria-controls="tab-model">Модель</button>
       <button role="tab" id="t-buy" data-tab="buy" aria-selected="false" aria-controls="tab-buy">Покупки</button>
       <button role="tab" id="t-acoustics" data-tab="acoustics" aria-selected="false" aria-controls="tab-acoustics">Акустика</button>
+      <button role="tab" id="t-sofa" data-tab="sofa" aria-selected="false" aria-controls="tab-sofa">Диван</button>
     </div>
 
     <div class="tab" id="tab-model" role="tabpanel" aria-labelledby="t-model">
@@ -204,6 +214,12 @@ button,input,select{font:inherit;color:inherit}
     </section>
 
     <section>
+      <h2>Корзина: что поменять</h2>
+      <ul class="buy chg" id="chg"></ul>
+      <p class="note">Где артикул не указан, его ещё нет: из корзины видны только названия, а поиск карточку не нашёл. Диван выбирали по похожей модели Ami на <a href="https://market.yandex.ru/cc/AkrxHd" target="_blank" rel="noopener">Яндекс Маркете</a>: 221,5 × 94, спальное место 191,5 × 148.</p>
+    </section>
+
+    <section>
       <h2>Докупить: акустика</h2>
       <ul class="buy">
         <li><b>Rockwool Акустик Баттс 100 мм</b><span class="q">2 уп.</span>
@@ -250,11 +266,6 @@ button,input,select{font:inherit;color:inherit}
       </ul>
     </section>
 
-    <section>
-      <h2>Уже в корзине Ozon</h2>
-      <ul class="buy cart" id="cart"></ul>
-      <p class="note">Диван выбирали по карточке похожей модели Ami на <a href="https://market.yandex.ru/cc/AkrxHd" target="_blank" rel="noopener">Яндекс Маркете</a>: 221,5 × 94, спальное место 191,5 × 148.</p>
-    </section>
 
     <section>
       <h2>Перемерить до заказа</h2>
@@ -325,6 +336,62 @@ button,input,select{font:inherit;color:inherit}
       </ul>
     </section>
     </div>
+    <div class="tab" id="tab-sofa" role="tabpanel" aria-labelledby="t-sofa" hidden>
+    <section>
+      <h2>Вывод</h2>
+      <div class="sel">
+        <b>Брать AMI MEBEL, если карточка пройдёт проверку ниже</b>
+        <span class="meta">Явно лучшей замены за 25–40 тыс. ₽ поиск не нашёл. У AMI самое широкое спальное место из найденного в бюджете (148 см), и в комнату он встаёт с запасом. Слабое место — бренд: у другой модели AMI покупатель пишет, что заявленного независимого блока, похоже, нет. Поэтому до заказа проверь блок, ткань и отзывы. Если не проходит — бери «Атланту НПБ 90», она дешевле.</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Как он встаёт в комнату</h2>
+      <div class="sum-box">
+        <div><span>Длина вдоль левой стены</span><span>221,5 из ≈230–250 см</span></div>
+        <div><span>Глубина сложенного</span><span>94 см</span></div>
+        <div><span>Проход до тумбы ТВ, сложен</span><span>≈181 см</span></div>
+        <div><span>Проход до тумбы ТВ, разложен</span><span>≈120 см</span></div>
+        <div><span>Спальное место</span><span>191,5 × 148</span></div>
+      </div>
+      <p class="note">На вкладке «Модель» выбери диван и нажми «Разложить»: проверка прохода пересчитается. Тканевый диван заодно немного глушит эхо между боковыми стенами, кожа так не работает.</p>
+    </section>
+
+    <section>
+      <h2>Сравнение</h2>
+      <ul class="buy">
+        <li><b>AMI MEBEL, еврокнижка (в корзине)</b><span class="q">32 463 ₽</span>
+          <small>221,5 × 94, спальное 191,5 × 148, независимый пружинный блок по карточке, ящик для белья, съёмные подушки, нагрузка до 200 кг. Бежевый, сливается со стенами и ковром. Отзывов именно на эту модель не нашёл. Цена «до скидки» на Маркете раздута, на скидку не смотри.</small>
+          <small class="lnk"><a href="https://market.yandex.ru/cc/AkrxHd" target="_blank" rel="noopener">похожая модель «Мадрид» на Маркете</a></small></li>
+        <li><b>«Атланта Люкс SE», НПБ 90, рогожка</b><span class="q">≈20,6–28 тыс. ₽</span>
+          <small>220 × 100 × 90, еврокнижка, независимый блок, ящик. Рогожка-микрокосичка, 35 000 циклов истирания, нагрузка до 240 кг. Дешевле AMI на 4–12 тыс. Глубина 100 см — ровно на пределе. Размер спального места не проверен. В выдаче цвета серый, синий, шоколад, платина, бежевого не видел: тёмный диван даст контраст с бежевыми стенами. Бери только версию с «НПБ 90» в названии, есть вариант на змейке без блока.</small>
+          <small class="lnk"><a href="https://www.ozon.ru/product/divan-krovat-s-yashchikom-dlya-hraneniya-atlanta-npb-90-evroknizhka-rogozhka-malmo-seryy-2800066201/" target="_blank" rel="noopener">Ozon, арт. 2800066201</a></small></li>
+        <li><b>Homart «Амстердам», велюр «латте»</b><span class="q">≈26,4 тыс. ₽</span>
+          <small>225 × 100 × 90, еврокнижка, независимый блок, ящик. Тёплый бежевый под интерьер, продавец с рейтингом 4,8. Но спальное место уже: около 140 × 190 (не проверено), и отзыв всего один.</small>
+          <small class="lnk"><a href="https://ozon.ru/t/AxW96WY" target="_blank" rel="noopener">Ozon</a></small></li>
+        <li><b>MOON FAMILY 133</b><span class="q">≈49–50 тыс. ₽</span>
+          <small>218 × 101 × 86, еврокнижка, независимый блок, есть светло-бежевый велюр. Известный бренд с шоурумами, качество предсказуемее. Но это на 17–18 тыс. дороже AMI, выше бюджета.</small>
+          <small class="lnk"><a href="https://market.yandex.ru/cc/9CDgVi" target="_blank" rel="noopener">Яндекс Маркет</a></small></li>
+      </ul>
+      <p class="note">Цены из поиска на 24.11.2026, карточки я не открывал. Перед заказом проверь цену, размеры и наличие.</p>
+    </section>
+
+    <section>
+      <h2>Проверить в карточке и отзывах до заказа</h2>
+      <ul class="tick">
+        <li>Прямо написано «независимый пружинный блок», а не «змейка». В отзывах с фото видны пружины</li>
+        <li>Плотность ППУ сиденья от 30–35 кг/м³ или ППУ высокоэластичный</li>
+        <li>Каркас из бруса или фанеры, не только ЛДСП. Механизм на металле</li>
+        <li>Ткань: тип и стойкость к истиранию от 20–30 тыс. циклов</li>
+        <li>Фото разложенного дивана в отзывах. Искать слова «щель», «перепад», «проседает», «запах», «скрипит»</li>
+        <li>Сиденье: высота 42–46 см, глубина 55–60 см, подушки на спинке</li>
+        <li>Длина спального места 190 см: тесно, если спит кто-то выше 180 см</li>
+        <li>Гарантия от 12–18 месяцев и условия возврата крупногабарита</li>
+        <li>Оттенок на живых фото покупателей рядом с бежевыми стенами и ковром</li>
+      </ul>
+      <p class="note">Если удобство важнее всего, перед заказом посиди на похожем диване в магазине: модели на маркетплейсах по описанию часто мягче или жёстче, чем ждёшь.</p>
+    </section>
+    </div>
   </aside>
 </div>
 
@@ -344,7 +411,7 @@ const HALF = Math.PI / 2;
 /* ---------- constants ---------- */
 // Measured from the plan (room, window, door) and from the photo of the far wall (window height, sill, ceiling).
 const DEF_S = {W:3.05, L:5.98, H:3.05, winW:1.20, winH:1.90, winSill:0.75, winOff:0.455, doorOff:0.22, doorW:0.80, doorH:2.05, hinge:'left', sofaOpen:false, refl:true,
-  deskH:0.75, deskW:3.05, floor:'herring', spkOff:0, spkGap:1.10};
+  deskH:0.75, deskW:3.05, floor:'herring', spkOff:0, spkGap:1.10, edit:false};
 const SOFA_D = 0.94, SOFA_D_OPEN = 1.55;
 const SPK_Z = -0.15, SPK_UP = 0.36, LIS_UP = 0.45;      // tweeter / ears above desk top
 const lisZ = () => SPK_Z + S.spkGap * Math.sqrt(3) / 2; // equilateral triangle
@@ -982,19 +1049,21 @@ function renderChecks(R){
 }
 function renderSel(){
   const el = $('#sel');
-  if (!selected) { el.innerHTML = '<b>Ничего</b><span class="meta">Нажми на предмет в модели или в списке ниже. Его можно тянуть, крутить и двигать стрелками.</span>'; return; }
+  if (!selected) { el.innerHTML = `<b>Ничего</b><span class="meta">Нажми на предмет в модели или в списке ниже, чтобы увидеть размеры и расстояния. ${S.edit ? 'Режим «Двигать»: предмет можно тянуть, крутить и двигать стрелками.' : 'Предметы закреплены. Чтобы переставлять, включи «Двигать» слева вверху на модели.'}</span>`; return; }
   const sp = SPEC[selected], it = st.items[selected], size = typeof sp.size === 'function' ? sp.size() : sp.size;
   let pos = '';
   if (sp.mount === 'floor' || sp.mount === 'ceiling') { const a = aabb(selected); pos = `до левой стены ${cm(a.x0)} · до правой ${cm(S.W - a.x1)} · до окна ${cm(a.z0)} · до стены с дверью ${cm(S.L - a.z1)}`; }
   else if (sp.mount === 'wall') { const len = (it.wall === 'L' || it.wall === 'R') ? S.L : S.W; pos = `центр на высоте ${cm(it.y)} · от ближнего угла ${cm(Math.min(it.s, len - it.s) - sp.w/2)} до края`; }
   else pos = blindMount() === 'inside' ? 'в оконном проёме' : 'на стене над проёмом';
   const acts = [];
-  if (sp.mount === 'floor' || sp.mount === 'ceiling') acts.push('<button class="btn" id="a-rot">Повернуть на 90°</button>');
+  if (S.edit && (sp.mount === 'floor' || sp.mount === 'ceiling')) acts.push('<button class="btn" id="a-rot">Повернуть на 90°</button>');
+  if (!S.edit && sp.mount !== 'fixed') acts.push('<button class="btn" id="a-edit">Двигать</button>');
   if (selected === 'sofa') acts.push(`<button class="btn primary" id="a-open">${S.sofaOpen ? 'Сложить' : 'Разложить'}</button>`);
   acts.push('<button class="btn" id="a-hide">Скрыть</button>');
   el.innerHTML = `<b>${sp.name}</b><span class="meta num">${size}</span><span class="meta">${pos} см</span><div class="acts">${acts.join('')}</div>`;
   const r = $('#a-rot'); if (r) r.onclick = rotateSel;
   const o = $('#a-open'); if (o) o.onclick = toggleSofa;
+  const ed = $('#a-edit'); if (ed) ed.onclick = () => setEdit(true);
   $('#a-hide').onclick = () => { st.items[selected].vis = false; place(selected); select(null); afterChange(); renderItems(); save(); };
 }
 function renderItems(){
@@ -1011,10 +1080,41 @@ function renderItems(){
   document.querySelectorAll('#items input').forEach(cb => cb.onchange = () => { ROWS[cb.dataset.i].ids.forEach(id => { st.items[id].vis = cb.checked; place(id); }); if (!cb.checked && ROWS[cb.dataset.i].ids.includes(selected)) select(null); afterChange(); save(); });
   document.querySelectorAll('#items .ttl').forEach(b => b.onclick = () => { const id = ROWS[b.dataset.i].ids[0]; if (st.items[id].vis === false) { ROWS[b.dataset.i].ids.forEach(x => { st.items[x].vis = true; place(x); }); afterChange(); renderItems(); } select(id); });
 }
+// what is in the Ozon cart (16 pcs) and what the plan needs; sku null = not verified yet
+const CART = [
+  {n:'Бас-ловушка TrapBass 1000 × 250 × 250, комплект 2 шт', sku:null, have:2, need:1, unit:4276, why:'Нужен один комплект, в правый угол у окна. Шире там не встать из-за шторы. На освободившиеся деньги базальт.'},
+  {n:'Ковёр Shaggy 200 × 300, ворс 30 мм, бежевый, Витебские ковры', sku:null, have:1, need:1, unit:9193},
+  {n:'Стойки для колонок настольные ABSMusic, 2 шт', sku:null, have:1, need:1, unit:6529},
+  {n:'Телевизор SBER SDX-50U5500DBB, 50″', sku:null, have:1, need:1, unit:28248},
+  {n:'Робот-пылесос Tuvio TR04MLBB', sku:null, have:1, need:1, unit:15190},
+  {n:'Диван AMI MEBEL, еврокнижка', sku:null, have:1, need:1, unit:32463, why:'Оставить или заменить, разбор на вкладке «Диван».'},
+  {n:'Римская штора блэкаут, рогожка, бежевая, 160 × 180', sku:null, have:1, need:1, unit:12152},
+  {n:'Акустическая панель 64 × 64 × 10, светло-бежевая', sku:null, have:4, need:4, unit:4826, why:'Две на боковые стены, две на стену с дверью.'},
+  {n:'Кабель-канал чёрный 80 см под стол', sku:null, have:1, need:1, unit:2453},
+  {n:'Тумба под ТВ 110 см', sku:null, have:1, need:1, unit:6819},
+  {n:'Реечная панель PLASTWOOD 2780 × 600 × 9, дуб сонома', sku:null, have:2, need:2, unit:2498, why:'Две панели — это облако 278 × 120 над столом.'}
+];
+const ADD = [
+  {n:'Rockwool Акустик Баттс 100 мм, 1000 × 600, упаковка 5 плит', q:'2 уп.', price:'≈8 000–9 700 ₽'},
+  {n:'Rockwool Акустик Баттс 50 мм, 1000 × 600', q:'6 плит', price:'цена не проверена'},
+  {n:'Брусок 20 × 40, сухой строганый', q:'≈30 м', price:'цена не проверена'},
+  {n:'Спанбонд 60 г/м²', q:'≈15 м²', price:'цена не проверена'},
+  {n:'Ткань для лицевой стороны: бязь, мешковина или рогожка', q:'≈5 м²', price:'цена не проверена'},
+  {n:'Измерительный микрофон Behringer ECM8000', q:'1 шт', price:'≈3 700–6 900 ₽', sku:'294371749', note:'карточка была без наличия'},
+  {n:'Экран для микрофона, наполнитель от 4–5 см', q:'1 шт', price:'≈4 400 ₽', sku:'267895350', note:'пример: ABs, 3 створки, был без наличия'},
+  {n:'Тяжёлая стойка или тренога под экран', q:'1 шт', price:'цена не проверена'},
+  {n:'Крепёж: степлер, скобы, саморезы, уголки, 4 анкера с крюками и тросы', q:'набор', price:'цена не проверена'}
+];
+const skuLink = k => k ? `<a href="https://www.ozon.ru/product/${k}/" target="_blank" rel="noopener">арт. ${k}</a>` : 'артикул не сверен';
 function renderCart(){
-  const lines = []; ROWS.forEach(r => r.lines.forEach(l => { if (l[1]) lines.push([l[0], l[1]]); }));
-  $('#cart').innerHTML = lines.map(l => `<li><span>${l[0]}${l[0].startsWith('TrapBass') ? ' <small>один комплект убрать</small>' : ''}</span><span class="q">${rub(l[1])}</span></li>`).join('');
-  $('#b-cart').textContent = rub(CART_TOTAL); $('#b-cart2').textContent = rub(CART_TOTAL - 4276);
+  const del = CART.filter(c => c.need < c.have), keep = CART.filter(c => c.need >= c.have);
+  const row = (c, cls, lab) => `<li><b>${c.n}</b><span class="act ${cls}">${lab}</span><small>${skuLink(c.sku)} · в корзине ${c.have} шт по ${rub(c.unit)}${c.need !== c.have ? ` → нужно ${c.need} шт, ${c.need < c.have ? 'экономия ' + rub((c.have - c.need) * c.unit) : ''}` : ` = ${rub(c.have * c.unit)}`}${c.why ? '. ' + c.why : ''}</small></li>`;
+  $('#chg').innerHTML =
+    `<li class="h"><h3>Убрать или уменьшить</h3></li>` + del.map(c => row(c, 'del', `−${c.have - c.need} шт`)).join('') +
+    `<li class="h"><h3>Добавить</h3></li>` + ADD.map(a => `<li><b>${a.n}</b><span class="act add">+${a.q}</span><small>${a.sku ? skuLink(a.sku) + ' · ' : ''}${a.price}${a.note ? ', ' + a.note : ''}. Подробности и ссылки ниже.</small></li>`).join('') +
+    `<li class="h"><h3>Оставить как есть</h3></li>` + keep.map(c => row(c, 'keep', `${c.have} шт`)).join('');
+  const total = CART.reduce((a, c) => a + c.have * c.unit, 0), after = CART.reduce((a, c) => a + c.need * c.unit, 0);
+  $('#b-cart').textContent = rub(total); $('#b-cart2').textContent = rub(after);
 }
 const PARAMS = [
   ['W','Ширина комнаты',1.5,6], ['L','Длина комнаты',2,10], ['H','Высота потолка',2.3,4.5],
@@ -1092,23 +1192,32 @@ function applyViewVisibility(){
 }
 function setView(v){
   view = v;
-  document.querySelectorAll('.views button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+  document.querySelectorAll('.views button[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
   ctlP.enabled = v !== 'plan'; ctlO.enabled = v === 'plan';
   if (v === 'plan') {
     cam = ortho; ctl = ctlO; fitOrtho(); ortho.zoom = 1;
     ortho.position.set(S.W/2, 20, S.L/2); ctlO.target.set(S.W/2, 0, S.L/2); ortho.updateProjectionMatrix(); ctlO.update();
-    $('#hint').textContent = 'План: окно сверху, сетка 50 см · тяни мебель, колесо или щипок — масштаб · R — повернуть';
+
   } else {
     cam = persp; ctl = ctlP;
     if (v === 'door') { persp.fov = 72; persp.position.set(S.doorOff + S.doorW/2, 1.6, S.L - 0.12); ctlP.target.set(S.W/2, 1.2, 0.3); }
     else { persp.fov = 48; persp.position.set(-2.6, 4.3, S.L + 1.9); ctlP.target.set(S.W/2, 0.7, S.L/2 - 0.5); }
     persp.updateProjectionMatrix(); ctlP.update();
-    $('#hint').textContent = 'Тяни мебель мышью или пальцем · пустое место — крутить вид · R — повернуть · стрелки — сдвиг на 1 см, с Shift на 10 см';
   }
-  applyViewVisibility(); dirty = true;
+  setHint(); applyViewVisibility(); dirty = true;
 }
-document.querySelectorAll('.views button').forEach(b => b.onclick = () => setView(b.dataset.view));
-const TABS = ['model', 'buy', 'acoustics'];
+document.querySelectorAll('.views button[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view));
+function setHint(){
+  $('#hint').textContent = !S.edit ? (view === 'plan' ? 'План: окно сверху, сетка 50 см · нажми на предмет, чтобы увидеть размеры · чтобы переставлять, включи «Двигать»' : 'Крути вид мышью или пальцем · нажми на предмет, чтобы увидеть размеры · чтобы переставлять, включи «Двигать»')
+    : view === 'plan' ? 'План: окно сверху, сетка 50 см · тяни мебель, колесо или щипок — масштаб · R — повернуть' : 'Тяни мебель мышью или пальцем · пустое место — крутить вид · R — повернуть · стрелки — сдвиг на 1 см, с Shift на 10 см';
+}
+function setEdit(on){
+  S.edit = !!on;
+  document.querySelectorAll('.views.mode button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.edit === '1') === S.edit)));
+  setHint(); renderSel(); save();
+}
+document.querySelectorAll('.views.mode button').forEach(b => b.onclick = () => setEdit(b.dataset.edit === '1'));
+const TABS = ['model', 'buy', 'acoustics', 'sofa'];
 function setTab(t){
   TABS.forEach(k => { $('#tab-' + k).hidden = k !== t; $('#t-' + k).setAttribute('aria-selected', String(k === t)); });
   if (t === 'model') resize();
@@ -1116,7 +1225,7 @@ function setTab(t){
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { setTab(b.dataset.tab); try { history.replaceState(null, '', b.dataset.tab === 'model' ? location.pathname + location.search : '#' + b.dataset.tab); } catch(_) {} });
 $('#refl').checked = S.refl;
 $('#refl').onchange = e => { S.refl = e.target.checked; afterChange(); save(); };
-$('#reset').onclick = () => { const keep = {W:S.W, L:S.L, H:S.H, winW:S.winW, winH:S.winH, winSill:S.winSill, winOff:S.winOff, doorOff:S.doorOff, doorW:S.doorW, doorH:S.doorH, hinge:S.hinge, deskH:S.deskH, deskW:S.deskW, floor:S.floor}; S = Object.assign({}, DEF_S, keep); st.items = defaultItems(S); select(null); rebuildAll(); renderSpk(); save(); };
+$('#reset').onclick = () => { const keep = {W:S.W, L:S.L, H:S.H, winW:S.winW, winH:S.winH, winSill:S.winSill, winOff:S.winOff, doorOff:S.doorOff, doorW:S.doorW, doorH:S.doorH, hinge:S.hinge, deskH:S.deskH, deskW:S.deskW, floor:S.floor, edit:S.edit}; S = Object.assign({}, DEF_S, keep); st.items = defaultItems(S); select(null); rebuildAll(); renderSpk(); save(); };
 
 function resize(){
   const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
@@ -1141,7 +1250,7 @@ stage.addEventListener('pointerdown', e => {
   const h = pick(); if (!h) return;
   const id = h.object.userData.id, sp = SPEC[id], it = st.items[id];
   select(id);
-  if (sp.mount === 'fixed') return;
+  if (sp.mount === 'fixed' || !S.edit) return;
   let pl, mode;
   if (sp.mount === 'wall' && view !== 'plan') { pl = wallPlane(it.wall); mode = 'wall'; }
   else { pl = new T.Plane(new T.Vector3(0,1,0), -h.point.y); mode = sp.mount === 'wall' ? 'wallPlan' : 'flat'; }
@@ -1166,8 +1275,9 @@ window.addEventListener('pointerup', e => {
 window.addEventListener('keydown', e => {
   if (!selected || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
   const sp = SPEC[selected], it = st.items[selected], step = e.shiftKey ? 0.10 : 0.01;
-  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') { rotateSel(); e.preventDefault(); return; }
   if (e.key === 'Escape') { select(null); return; }
+  if (!S.edit) return;
+  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') { rotateSel(); e.preventDefault(); return; }
   const k = {ArrowLeft:[-1,0], ArrowRight:[1,0], ArrowUp:[0,-1], ArrowDown:[0,1]}[e.key]; if (!k || sp.mount === 'fixed') return;
   e.preventDefault();
   if (sp.mount === 'wall') { it.s += k[0] * step; it.y -= k[1] * step; } else { it.x += k[0] * step; it.z += k[1] * step; }
@@ -1179,6 +1289,7 @@ try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', appl
 new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
 rebuildAll(); renderParams(); renderSpk(); renderCart(); applyTheme(); resize();
+setEdit(S.edit);
 const startView = (location.hash || '').slice(1);
 setView(['free','door','plan'].includes(startView) ? startView : 'free'); select(null);
 if (TABS.includes(startView)) setTab(startView);
