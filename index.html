@@ -221,7 +221,7 @@ html.fs-on,html.fs-on body{overflow:hidden}
         <li>Под левой частью стола тумба с ящиками для дисков, блока питания и прочего. Она же служит опорой длинной столешнице. Наверху там место под звуковую карту или MIDI-клавиатуру.</li>
         <li>Обе бас-ловушки стоят на столе в углах, по 2 м вверх. Облако висит над столом, панели стоят в точках первых отражений.</li>
         <li>Микрофон стоит на ковре в ≈2 м от окна и на 17 см левее середины. Вокалист смотрит на стол и видит экран. За спиной у него стена с дверью и две панели на высоте рта.</li>
-        <li>Диван у левой стены, напротив ТВ на тумбе 33 см с приставкой. Пол — ёлочка, прямую доску можно включить в замерах.</li>
+        <li>Диван у левой стены, напротив ТВ 65″ на тумбе 160 × 45, высота 53,6. Пол — ёлочка, прямую доску можно включить в замерах.</li>
       </ol>
     </section>
 
@@ -291,7 +291,7 @@ html.fs-on,html.fs-on body{overflow:hidden}
         <li>Ширина оконного проёма и глубина ниши: от них зависит столешница</li>
         <li>Высота низа рамы от пола: по ней высота стола</li>
         <li>Высота потолка: длина ловушек и подвес облака</li>
-        <li>Расстояние между ножками ТВ: должно быть меньше 110 см, ширины тумбы</li>
+        <li>Подставка ТВ 65″ (ножки по краям или по центру) и высота с ней: по карточке не сверены, ТВ 144,6 на тумбу 160 встаёт в любом случае</li>
         <li>Высота от верха проёма до столешницы: длина шторы</li>
         <li>От правого края проёма до правой стены, по плану 47 см: ловушке нужно не меньше 45</li>
         <li>Какая створка открывается поворотом: правую на 90° не открыть, она упрётся в край ловушки</li>
@@ -374,8 +374,8 @@ html.fs-on,html.fs-on body{overflow:hidden}
       <div class="sum-box">
         <div><span>Длина вдоль левой стены</span><span>221,5 из ≈230–250 см</span></div>
         <div><span>Глубина сложенного</span><span>94 см</span></div>
-        <div><span>Проход до тумбы ТВ, сложен</span><span>≈181 см</span></div>
-        <div><span>Проход до тумбы ТВ, разложен</span><span>≈120 см</span></div>
+        <div><span>Проход до тумбы ТВ, сложен</span><span>≈166 см</span></div>
+        <div><span>Проход до тумбы ТВ, разложен</span><span>≈105 см</span></div>
         <div><span>Спальное место</span><span>191,5 × 148</span></div>
       </div>
       <p class="note">На вкладке «Модель» выбери диван и нажми «Разложить»: проверка прохода пересчитается. Тканевый диван заодно немного глушит эхо между боковыми стенами, кожа так не работает.</p>
@@ -1536,7 +1536,7 @@ html.fs-on,html.fs-on body{overflow:hidden}
 (function(){
 'use strict';
 const T = THREE;
-const KEY = 'studio-room-5980-v6';
+const KEY = 'studio-room-5980-v7';
 const $ = s => document.querySelector(s);
 const cm = v => Math.round(v * 100);
 const rub = n => n.toLocaleString('ru-RU') + ' ₽';
@@ -1555,7 +1555,7 @@ const PRESETS = {
   rec:{label:'По центру комнаты', calc:() => ({spkOff:S.W / 2 - st.items.desk.x, spkGap:1.10})},
   edge:{label:'Левый у края стола', calc:() => ({spkOff:-S.deskW / 2 + 0.12 + 0.55, spkGap:1.10})}
 };
-const CART_TOTAL = 160469;
+const CART_TOTAL = 163253;
 
 function defaultItems(S){ return {
   desk:{x:S.deskW / 2, z:0.35, rot:0, vis:true},
@@ -1573,7 +1573,7 @@ function defaultItems(S){ return {
   pB2:{wall:'B', s:2.12, y:1.55, vis:true},
   cloud:{x:S.W/2, z:1.10, rot:0, vis:true},
   sofa:{x:SOFA_D/2, z:3.30, rot:1, vis:true},
-  tv:{x:S.W-0.15, z:3.30, rot:3, vis:true},
+  tv:{x:S.W-0.225, z:3.30, rot:3, vis:true},
   rug:{x:S.W/2, z:3.30, rot:0, vis:true},
   vac:{x:S.W-0.24, z:4.95, rot:3, vis:true},
   blind:{vis:true}
@@ -1595,7 +1595,7 @@ const SPEC = {
   pB2:{name:'Панель 64 × 64, стена с дверью', mount:'wall', w:0.64, h:0.64, size:'64 × 64 × 10', build:buildPanel},
   cloud:{name:'Облако над столом', mount:'ceiling', w:2.78, d:1.20, size:'278 × 120 (2 панели по 60), толщина 9 мм', build:buildCloud},
   sofa:{name:'Диван-еврокнижка', mount:'floor', w:2.215, d:()=>S.sofaOpen?SOFA_D_OPEN:SOFA_D, size:()=>S.sofaOpen?'221,5 × ≈155, разложен (спальное 191,5 × 148)':'221,5 × 94 × ≈90', build:buildSofa},
-  tv:{name:'ТВ-зона', mount:'floor', w:1.10, d:0.30, size:'тумба 110 × ≈30 × 33 · ТВ 55″ 122,6 × ≈71 на моноподставке', build:buildTV},
+  tv:{name:'ТВ-зона', mount:'floor', w:1.60, d:0.45, size:'тумба BELO 160 × 45 × 53,6 · ТВ 65″ 144,6 × ≈88 с подставкой (подставка не сверена)', build:buildTV},
   rug:{name:'Ковёр shaggy', mount:'floor', w:2.00, d:3.00, size:'200 × 300, ворс 30 мм', build:buildRug, soft:true},
   vac:{name:'Робот-пылесос', mount:'floor', w:0.35, d:0.46, size:'станция 34 × 45,7 × 59 · робот Ø ≈35', build:buildVac},
   blind:{name:'Штора блэкаут', mount:'fixed', size:()=>{ const b = blindGeom(); return b.inside ? `в проёме ≈${cm(b.w)} × ${cm(b.l)}, по замеру` : `на стене ${cm(b.w)} × ${cm(b.l)}`; }, build:buildBlind}
@@ -1611,7 +1611,7 @@ const ROWS = [
   {ids:['cloud'], title:'Облако над столом', lines:[['Реечная PLASTWOOD 2780 × 600 × 9, 2 шт',5006],['Rockwool Акустик Баттс 50 мм, 1 уп. 10 плит',3392],['Тросовые подвесы и анкеры',null,'бригада']]},
   {ids:['blind'], title:'Штора', lines:[['Блэкаут в проём ≈118 × 190, по замеру',null,'выберешь позже']]},
   {ids:['sofa'], title:'Диван', lines:[['Другой диван, не на Ozon. В модели габариты AMI 221,5 × 94',null,'выбираешь']]},
-  {ids:['tv'], title:'ТВ-зона', lines:[['SBER SDX-55U5500MBA, 55″',29975],['Тумба под ТВ 110',6833],['Приставка на полке',null,'своя']]},
+  {ids:['tv'], title:'ТВ-зона', lines:[['SBER SDX-65U5500MBB, 65″',34951],['Тумба BELO 160 × 45 × 53,6, графит',4641],['Приставка',null,'своя']]},
   {ids:['rug'], title:'Ковёр', lines:[['Shaggy 200 × 300, Витебские ковры',9154]]},
   {ids:['vac'], title:'Робот-пылесос', lines:[['Dreame Bot L40s Ultra (RLL22SE), станция с мойкой и сушкой швабр',61442]]}
 ];
@@ -1705,7 +1705,7 @@ const MAT = {
   wood:std(0x4a3324,{roughness:.5}), silver:std(0xc8cbd0,{roughness:.3,metalness:.6}),
   screen:std(0x0f1620,{emissive:0x1b2a3a,emissiveIntensity:.7,roughness:.2}), chair:std(0x18191b,{roughness:.6}),
   red:std(0xa3202a,{roughness:.6}), rug:std(0xffffff,{map:rugTex(),roughness:1}), linen:std(0xd2c3a6,{roughness:1}),
-  radiator:std(0xededeb,{roughness:.4}), tvBody:std(0x0d0e10,{roughness:.4}),
+  radiator:std(0xededeb,{roughness:.4}), tvBody:std(0x0d0e10,{roughness:.4}), graphite:std(0x4a4c50,{roughness:.7}),
   cloudOak:std(0xc9a57c,{roughness:.6}), cloudFelt:std(0x141414,{roughness:1}),
   person:std(0x8da2b4,{roughness:.85}), basalt:std(0x8f8a80,{roughness:1}), pop:std(0x111111,{transparent:true, opacity:.55, roughness:1})
 };
@@ -1829,16 +1829,14 @@ function buildSofa(){
 }
 function buildTV(){
   const g = new T.Group();
-  g.add(boxB(1.06, 0.05, 0.26, MAT.black, 0, 0, 0));
-  g.add(boxB(1.10, 0.28, 0.30, MAT.oak, 0, 0.05, 0));
-  g.add(boxB(0.34, 0.20, 0.02, MAT.black, 0, 0.09, 0.141));
-  g.add(boxB(0.30, 0.075, 0.20, MAT.white, 0, 0.10, 0.05));                      // console on the open shelf
-  g.add(boxB(0.30, 0.012, 0.20, MAT.black, 0, 0.13, 0.05));
-  [-1, 1].forEach(s => g.add(boxB(0.003, 0.24, 0.005, MAT.wood, s * 0.18, 0.07, 0.151)));
-  g.add(boxB(0.36, 0.015, 0.25, MAT.black, 0, 0.33, -0.02));                     // monostand base, depth with TV 27,7
-  g.add(boxB(0.08, 0.08, 0.04, MAT.black, 0, 0.345, -0.08));
-  g.add(boxB(1.226, 0.71, 0.06, MAT.tvBody, 0, 0.40, -0.06));
-  g.add(boxB(1.204, 0.688, 0.002, MAT.screen, 0, 0.411, -0.029));
+  // BELO 160 × 45 × 53,6, graphite, drawers; TV 65″ 1446 wide, ≈880 high with stand (vc.ru), stand type not verified
+  g.add(boxB(1.56, 0.03, 0.42, MAT.black, 0, 0, 0));
+  g.add(boxB(1.60, 0.506, 0.45, MAT.graphite, 0, 0.03, 0));
+  [-1, 1].forEach(s => g.add(boxB(0.004, 0.44, 0.004, MAT.black, s * 0.267, 0.06, 0.226)));
+  [-1, 0, 1].forEach(s => g.add(boxB(0.16, 0.012, 0.012, MAT.black, s * 0.533, 0.47, 0.23)));
+  [-1, 1].forEach(s => g.add(boxB(0.06, 0.012, 0.24, MAT.black, s * 0.60, 0.536, -0.08)));   // feet, ≈
+  g.add(boxB(1.446, 0.831, 0.078, MAT.tvBody, 0, 0.585, -0.12));
+  g.add(boxB(1.42, 0.805, 0.002, MAT.screen, 0, 0.598, -0.080));
   return g;
 }
 function buildRug(){ const g = new T.Group(); g.add(boxB(2.00, 0.03, 3.00, MAT.rug, 0, 0, 0)); return g; }
@@ -2115,12 +2113,12 @@ function computeChecks(R){
     }
     const sg = groups.sofa, d = S.sofaOpen ? SOFA_D_OPEN : SOFA_D;
     const eye = new T.Vector3(0, 1.05, -d/2 + 0.40).applyMatrix4(sg.matrixWorld);
-    const scr = new T.Vector3(0, 0.755, -0.03).applyMatrix4(groups.tv.matrixWorld);
+    const scr = new T.Vector3(0, 1.00, -0.08).applyMatrix4(groups.tv.matrixWorld);
     const dist = horiz(eye, scr);
-    out.push({t:'От дивана до экрана', v:`≈${(dist).toFixed(2).replace('.', ',')} м`, s:dist >= 1.6 && dist <= 2.3 ? 'ok' : 'info',
-      n:dist > 2.3 ? 'Для 55″ обычно советуют 1,7–2,3 м (угол обзора 30–40°). Дальше экран кажется маленьким, но смотреть можно.' : ''});
+    out.push({t:'От дивана до экрана', v:`≈${(dist).toFixed(2).replace('.', ',')} м`, s:dist >= 2.0 && dist <= 2.7 ? 'ok' : 'info',
+      n:'Для 65″ угол обзора 30–40° даёт 2,0–2,7 м. ' + (dist > 2.7 ? 'Дальше экран кажется меньше, но смотреть можно.' : dist < 2.0 ? 'Ближе видно, как экран заполняет всё поле зрения.' : 'В норме.')});
   }
-  if (vis('tv')) out.push({t:'ТВ на тумбе', v:'ТВ 122,6 см, тумба 110 см', s:'info', n:'Моноподставка по центру, на тумбе стоит. Экран выступает за тумбу на ≈6 см с каждой стороны: на вид терпимо, тумба шире будет смотреться лучше.'});
+  if (vis('tv')) out.push({t:'ТВ на тумбе', v:'ТВ 144,6 см, тумба 160 см', s:'ok', n:'Тумба шире экрана на ≈7,5 см с каждой стороны. Центр экрана ≈1,0 м от пола, это на уровне глаз сидя. Открытой полки нет: приставку ставить спереди ТВ (≈19 см глубины) или в ящик, тогда нужен пульт по Bluetooth и отверстие под кабели и воздух.'});
 
   if (vis('mic')) {
     const m = st.items.mic, dw = Math.min(m.x, S.W - m.x, m.z, S.L - m.z), offC = Math.abs(m.x - S.W/2), offL = Math.abs(m.z - S.L/2);
@@ -2258,7 +2256,7 @@ function renderItems(){
   document.querySelectorAll('#items input').forEach(cb => cb.onchange = () => { ROWS[cb.dataset.i].ids.forEach(id => { st.items[id].vis = cb.checked; place(id); }); if (!cb.checked && ROWS[cb.dataset.i].ids.includes(selected)) select(null); afterChange(); save(); });
   document.querySelectorAll('#items .ttl').forEach(b => b.onclick = () => { const id = ROWS[b.dataset.i].ids[0]; if (st.items[id].vis === false) { ROWS[b.dataset.i].ids.forEach(x => { st.items[x].vis = true; place(x); }); afterChange(); renderItems(); } select(id); });
 }
-// Ozon cart as of 25.11.2026 (13 positions, 32 pcs, 112 642 ₽); ac = acoustics material; sku null = not verified
+// Ozon cart as of 25.11.2026 (12 positions, 31 pcs, 163 253 ₽); ac = acoustics material; sku null = not verified
 const CART = [
   {n:'Акустическая панель 64 × 64 × 10, светло-бежевая', q:4, unit:4826, ac:true, why:'Две на боковые стены, две на стену с дверью. Крепёж в комплекте.'},
   {n:'Rockwool Акустик Баттс 100 мм, 1000 × 600, 5 плит', q:3, unit:3925, ac:true, why:'Четыре угловые ловушки и панель 60 × 100, 5 плит в запас.'},
@@ -2268,8 +2266,8 @@ const CART = [
   {n:'Мешковина джутовая 420 г/м², 1 м × 110 см', q:10, unit:248, ac:true, why:'Лицевая сторона ловушек и панели.'},
   {n:'Спанбонд белый 60, 3,2 × 10 м', q:1, unit:246, ac:true, why:'Обёртка ваты.'},
   {n:'Стойки для колонок настольные ABSMusic, 2 шт', q:1, unit:6537},
-  {n:'Телевизор SBER SDX-55U5500MBA, 55″', q:1, unit:29975, why:'Салют ТВ, 4K, моноподставка по центру. Цена с Ozon-картой (без неё 30 776).'},
-  {n:'Тумба под ТВ 110 см', q:1, unit:6833},
+  {n:'Телевизор SBER SDX-65U5500MBB, 65″', q:1, unit:34951, why:'Салют ТВ, 4K, 60 Гц, Direct LED. Ширина 144,6. Цена с Ozon-картой (без неё 35 884).'},
+  {n:'Тумба под ТВ BELO 160 × 45 × 53,6, графит, с ящиками', q:1, unit:4641, why:'Цена с Ozon-картой (без неё 5 100).'},
   {n:'Ковёр Shaggy 200 × 300, ворс 30 мм, бежевый, Витебские ковры', q:1, unit:9154},
   {n:'Робот-пылесос Dreame Bot L40s Ultra, RLL22SE', q:1, unit:61442, why:'Автовыгрузка пыли, мойка и сушка швабр, на коврах снимает швабры. Цена с Ozon-картой (без неё 68 269); в других магазинах ≈70–75 тыс.'}
 ];
@@ -2279,6 +2277,8 @@ const REMOVED = [
   {n:'Диван AMI MEBEL, еврокнижка', sum:32463, why:'Будет другой, не с Ozon.'},
   {n:'Кабель-канал чёрный 80 см под стол', sum:2452, why:'Убран 25.11.'},
   {n:'Телевизор SBER SDX-50U5500DBB, 50″', sum:25948, why:'Заменён на 55″ той же серии.'},
+  {n:'Телевизор SBER SDX-55U5500MBA, 55″', sum:29975, why:'Заменён на 65″ той же серии.'},
+  {n:'Тумба под ТВ 110 см', sum:6833, why:'Узкая под ТВ, заменена на BELO 160.'},
   {n:'Робот-пылесос Tuvio TR04MLBB', sum:15190, why:'Станция только заряжает, тряпка не поднимается и мочит ковёр. Заменён на Dreame L40s Ultra.'}
 ];
 const ADD = [
