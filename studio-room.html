@@ -439,7 +439,7 @@ const PRESETS = {
   rec:{label:'По центру комнаты', calc:() => ({spkOff:S.W / 2 - st.items.desk.x, spkGap:1.10})},
   edge:{label:'Левый у края стола', calc:() => ({spkOff:-S.deskW / 2 + 0.12 + 0.55, spkGap:1.10})}
 };
-const CART_TOTAL = 112642;
+const CART_TOTAL = 160469;
 
 function defaultItems(S){ return {
   desk:{x:S.deskW / 2, z:0.35, rot:0, vis:true},
@@ -479,14 +479,14 @@ const SPEC = {
   pB2:{name:'Панель 64 × 64, стена с дверью', mount:'wall', w:0.64, h:0.64, size:'64 × 64 × 10', build:buildPanel},
   cloud:{name:'Облако над столом', mount:'ceiling', w:2.78, d:1.20, size:'278 × 120 (2 панели по 60), толщина 9 мм', build:buildCloud},
   sofa:{name:'Диван-еврокнижка', mount:'floor', w:2.215, d:()=>S.sofaOpen?SOFA_D_OPEN:SOFA_D, size:()=>S.sofaOpen?'221,5 × ≈155, разложен (спальное 191,5 × 148)':'221,5 × 94 × ≈90', build:buildSofa},
-  tv:{name:'ТВ-зона', mount:'floor', w:1.10, d:0.30, size:'тумба 110 × ≈30 × 33 · ТВ ≈112 × 65 на ножках', build:buildTV},
+  tv:{name:'ТВ-зона', mount:'floor', w:1.10, d:0.30, size:'тумба 110 × ≈30 × 33 · ТВ 55″ 122,6 × ≈71 на моноподставке', build:buildTV},
   rug:{name:'Ковёр shaggy', mount:'floor', w:2.00, d:3.00, size:'200 × 300, ворс 30 мм', build:buildRug, soft:true},
-  vac:{name:'Робот-пылесос', mount:'floor', w:0.36, d:0.48, size:'Ø ≈35 × 10 + база', build:buildVac},
+  vac:{name:'Робот-пылесос', mount:'floor', w:0.35, d:0.46, size:'станция 34 × 45,7 × 59 · робот Ø ≈35', build:buildVac},
   blind:{name:'Штора блэкаут', mount:'fixed', size:()=>{ const b = blindGeom(); return b.inside ? `в проёме ≈${cm(b.w)} × ${cm(b.l)}, по замеру` : `на стене ${cm(b.w)} × ${cm(b.l)}`; }, build:buildBlind}
 };
 
 const ROWS = [
-  {ids:['desk'], title:'Рабочее место', lines:[['Столешница от стены до стены 305 × 70',null,'на заказ'],['Тумба с ящиками под левой частью',null,'предлагаю'],['Стойки ABSMusic, 2 шт',6537],['Кабель-канал под стол, 80 см',2452],['Мониторы, MacBook, звуковая карта',null,'свои']]},
+  {ids:['desk'], title:'Рабочее место', lines:[['Столешница от стены до стены 305 × 70',null,'на заказ'],['Тумба с ящиками под левой частью',null,'предлагаю'],['Стойки ABSMusic, 2 шт',6537],['Мониторы, MacBook, звуковая карта',null,'свои']]},
   {ids:['chair'], title:'Кресло', lines:[['Игровое кресло',null,'своё']]},
   {ids:['mic'], title:'Микрофон', lines:[['Студийный микрофон, стойка и поп-фильтр',null,'свои'],['Экран для микрофона и стойка под него',null,'решишь сам']]},
   {ids:['person'], title:'Человек 175 см', lines:[['Для масштаба и точки записи вокала',null,'—']]},
@@ -495,9 +495,9 @@ const ROWS = [
   {ids:['cloud'], title:'Облако над столом', lines:[['Реечная PLASTWOOD 2780 × 600 × 9, 2 шт',5006],['Rockwool Акустик Баттс 50 мм, 1 уп. 10 плит',3392],['Тросовые подвесы и анкеры',null,'бригада']]},
   {ids:['blind'], title:'Штора', lines:[['Блэкаут в проём ≈118 × 190, по замеру',null,'выберешь позже']]},
   {ids:['sofa'], title:'Диван', lines:[['Другой диван, не на Ozon. В модели габариты AMI 221,5 × 94',null,'выбираешь']]},
-  {ids:['tv'], title:'ТВ-зона', lines:[['SBER SDX-50U5500DBB, 50″',25948],['Тумба под ТВ 110',6833],['Приставка на полке',null,'своя']]},
+  {ids:['tv'], title:'ТВ-зона', lines:[['SBER SDX-55U5500MBA, 55″',29975],['Тумба под ТВ 110',6833],['Приставка на полке',null,'своя']]},
   {ids:['rug'], title:'Ковёр', lines:[['Shaggy 200 × 300, Витебские ковры',9154]]},
-  {ids:['vac'], title:'Робот-пылесос', lines:[['Tuvio TR04MLBB',15190]]}
+  {ids:['vac'], title:'Робот-пылесос', lines:[['Dreame Bot L40s Ultra (RLL22SE), станция с мойкой и сушкой швабр',61442]]}
 ];
 
 /* ---------- state ---------- */
@@ -719,17 +719,19 @@ function buildTV(){
   g.add(boxB(0.30, 0.075, 0.20, MAT.white, 0, 0.10, 0.05));                      // console on the open shelf
   g.add(boxB(0.30, 0.012, 0.20, MAT.black, 0, 0.13, 0.05));
   [-1, 1].forEach(s => g.add(boxB(0.003, 0.24, 0.005, MAT.wood, s * 0.18, 0.07, 0.151)));
-  [-0.46, 0.46].forEach(x => g.add(boxB(0.06, 0.07, 0.18, MAT.black, x, 0.33, -0.04)));
-  g.add(boxB(1.117, 0.648, 0.06, MAT.tvBody, 0, 0.40, -0.06));
-  g.add(boxB(1.095, 0.626, 0.002, MAT.screen, 0, 0.411, -0.029));
+  g.add(boxB(0.36, 0.015, 0.25, MAT.black, 0, 0.33, -0.02));                     // monostand base, depth with TV 27,7
+  g.add(boxB(0.08, 0.08, 0.04, MAT.black, 0, 0.345, -0.08));
+  g.add(boxB(1.226, 0.71, 0.06, MAT.tvBody, 0, 0.40, -0.06));
+  g.add(boxB(1.204, 0.688, 0.002, MAT.screen, 0, 0.411, -0.029));
   return g;
 }
 function buildRug(){ const g = new T.Group(); g.add(boxB(2.00, 0.03, 3.00, MAT.rug, 0, 0, 0)); return g; }
 function buildVac(){
   const g = new T.Group();
-  g.add(boxB(0.16, 0.10, 0.10, MAT.black, 0, 0, -0.19));
-  g.add(cyl(0.175, 0.097, MAT.black, 0, 0, 0.05, 48));
-  g.add(cyl(0.04, 0.02, MAT.cone, 0, 0.097, 0.02));
+  g.add(boxB(0.34, 0.59, 0.25, MAT.white, 0, 0, -0.105));                        // station 34 × 45,7 × 59
+  g.add(boxB(0.34, 0.02, 0.207, MAT.white, 0, 0, 0.124));                         // ramp
+  g.add(cyl(0.175, 0.097, MAT.white, 0, 0.02, 0.05, 48));
+  g.add(cyl(0.04, 0.02, MAT.cone, 0, 0.117, 0.02));
   return g;
 }
 // 'wall': the 160 × 180 roman blind from the cart, on the wall above the window; 'niche': made to measure inside the opening
@@ -997,12 +999,12 @@ function computeChecks(R){
     }
     const sg = groups.sofa, d = S.sofaOpen ? SOFA_D_OPEN : SOFA_D;
     const eye = new T.Vector3(0, 1.05, -d/2 + 0.40).applyMatrix4(sg.matrixWorld);
-    const scr = new T.Vector3(0, 0.72, -0.03).applyMatrix4(groups.tv.matrixWorld);
+    const scr = new T.Vector3(0, 0.755, -0.03).applyMatrix4(groups.tv.matrixWorld);
     const dist = horiz(eye, scr);
-    out.push({t:'От дивана до экрана', v:`≈${(dist).toFixed(2).replace('.', ',')} м`, s:dist >= 1.4 && dist <= 2.2 ? 'ok' : 'info',
-      n:dist > 2.2 ? 'Для 50″ обычно советуют 1,5–2,1 м (угол обзора 30–40°). Дальше экран кажется маленьким, но смотреть можно.' : ''});
+    out.push({t:'От дивана до экрана', v:`≈${(dist).toFixed(2).replace('.', ',')} м`, s:dist >= 1.6 && dist <= 2.3 ? 'ok' : 'info',
+      n:dist > 2.3 ? 'Для 55″ обычно советуют 1,7–2,3 м (угол обзора 30–40°). Дальше экран кажется маленьким, но смотреть можно.' : ''});
   }
-  if (vis('tv')) out.push({t:'ТВ на тумбе', v:'ТВ ≈111,7 см, тумба 110 см', s:'info', n:'Ножки у этого ТВ по краям. Проверь в карточке расстояние между ними, оно должно быть меньше 110 см.'});
+  if (vis('tv')) out.push({t:'ТВ на тумбе', v:'ТВ 122,6 см, тумба 110 см', s:'info', n:'Моноподставка по центру, на тумбе стоит. Экран выступает за тумбу на ≈6 см с каждой стороны: на вид терпимо, тумба шире будет смотреться лучше.'});
 
   if (vis('mic')) {
     const m = st.items.mic, dw = Math.min(m.x, S.W - m.x, m.z, S.L - m.z), offC = Math.abs(m.x - S.W/2), offL = Math.abs(m.z - S.L/2);
@@ -1136,7 +1138,7 @@ function renderItems(){
       <span class="sum">${sum ? rub(sum) : '—'}</span></li>`;
   }).join('');
   $('#total').textContent = rub(total);
-  $('#totalNote').textContent = total === CART_TOTAL ? 'Совпадает с корзиной Ozon на 25.11.2026: 13 позиций, 32 шт. Стол, штора и диван сюда не входят.' : 'Не совпадает с корзиной Ozon (' + rub(CART_TOTAL) + ').';
+  $('#totalNote').textContent = total === CART_TOTAL ? 'Совпадает с корзиной Ozon на 25.11.2026 (цены с Ozon-картой): 12 позиций, 31 шт. Стол, штора и диван сюда не входят.' : 'Не совпадает с корзиной Ozon (' + rub(CART_TOTAL) + ').';
   document.querySelectorAll('#items input').forEach(cb => cb.onchange = () => { ROWS[cb.dataset.i].ids.forEach(id => { st.items[id].vis = cb.checked; place(id); }); if (!cb.checked && ROWS[cb.dataset.i].ids.includes(selected)) select(null); afterChange(); save(); });
   document.querySelectorAll('#items .ttl').forEach(b => b.onclick = () => { const id = ROWS[b.dataset.i].ids[0]; if (st.items[id].vis === false) { ROWS[b.dataset.i].ids.forEach(x => { st.items[x].vis = true; place(x); }); afterChange(); renderItems(); } select(id); });
 }
@@ -1150,16 +1152,18 @@ const CART = [
   {n:'Мешковина джутовая 420 г/м², 1 м × 110 см', q:10, unit:248, ac:true, why:'Лицевая сторона ловушек и панели.'},
   {n:'Спанбонд белый 60, 3,2 × 10 м', q:1, unit:246, ac:true, why:'Обёртка ваты.'},
   {n:'Стойки для колонок настольные ABSMusic, 2 шт', q:1, unit:6537},
-  {n:'Кабель-канал чёрный 80 см под стол', q:1, unit:2452},
-  {n:'Телевизор SBER SDX-50U5500DBB, 50″', q:1, unit:25948, why:'Разбор ОС и альтернатив — отдельной сессией.'},
+  {n:'Телевизор SBER SDX-55U5500MBA, 55″', q:1, unit:29975, why:'Салют ТВ, 4K, моноподставка по центру. Цена с Ozon-картой (без неё 30 776).'},
   {n:'Тумба под ТВ 110 см', q:1, unit:6833},
   {n:'Ковёр Shaggy 200 × 300, ворс 30 мм, бежевый, Витебские ковры', q:1, unit:9154},
-  {n:'Робот-пылесос Tuvio TR04MLBB', q:1, unit:15190, why:'Сравнение со станциями самоочистки — отдельной сессией.'}
+  {n:'Робот-пылесос Dreame Bot L40s Ultra, RLL22SE', q:1, unit:61442, why:'Автовыгрузка пыли, мойка и сушка швабр, на коврах снимает швабры. Цена с Ozon-картой (без неё 68 269); в других магазинах ≈70–75 тыс.'}
 ];
 const REMOVED = [
   {n:'Бас-ловушка TrapBass 1000 × 250 × 250, 2 комплекта', sum:8552, why:'Во всех углах базальт, он работает ниже по частоте.'},
   {n:'Римская штора блэкаут 160 × 180', sum:12152, why:'На стене заходит на правую ловушку. Взамен штора в проём.'},
-  {n:'Диван AMI MEBEL, еврокнижка', sum:32463, why:'Будет другой, не с Ozon.'}
+  {n:'Диван AMI MEBEL, еврокнижка', sum:32463, why:'Будет другой, не с Ozon.'},
+  {n:'Кабель-канал чёрный 80 см под стол', sum:2452, why:'Убран 25.11.'},
+  {n:'Телевизор SBER SDX-50U5500DBB, 50″', sum:25948, why:'Заменён на 55″ той же серии.'},
+  {n:'Робот-пылесос Tuvio TR04MLBB', sum:15190, why:'Станция только заряжает, тряпка не поднимается и мочит ковёр. Заменён на Dreame L40s Ultra.'}
 ];
 const ADD = [
   {n:'Штора блэкаут в проём ≈118 × 190', q:'1 шт', price:'выберешь после замера', note:'римская или рулонная UNI на створки'},
