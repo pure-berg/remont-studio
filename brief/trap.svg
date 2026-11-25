@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" font-family="system-ui,sans-serif" role="img" aria-label="Угловая ловушка, вид сверху">
+<text x="24.0" y="30.0" font-size="15" font-weight="600" fill="#1a1a1a">Ловушка в углу: плита поперёк угла, за ней пустой воздух</text>
+<text x="24.0" y="50.0" font-size="11.5" fill="#666">Вид сверху на один угол, в масштабе</text>
+<rect x="134" y="134" width="470" height="16" fill="#ececec" stroke="#8a8a8a"/>
+<rect x="134" y="150" width="16" height="390" fill="#ececec" stroke="#8a8a8a"/>
+<text x="602.0" y="126.0" font-size="11.5" text-anchor="end" fill="#666">стена</text>
+<text x="126.0" y="536.0" font-size="11.5" text-anchor="end" fill="#666">стена</text>
+<polygon points="150.0,150.0 444.0,150.0 150.0,444.0" fill="#ececec"/>
+<text x="190.0" y="240.0" font-size="13" fill="#1a1a1a">воздух,</text>
+<text x="190.0" y="258.0" font-size="13" fill="#1a1a1a">не заполнять</text>
+<polygon points="444.0,150.0 493.5,199.5 199.5,493.5 150.0,444.0" fill="#2563eb" fill-opacity="0.12" stroke="#2563eb" stroke-width="2"/>
+<text x="321.5" y="326.5" font-size="13" text-anchor="middle" font-weight="600" transform="rotate(-45 321.5 321.5)" fill="#1a1a1a">Rockwool 100 мм в спанбонде, ширина 60 см</text>
+<text x="363.5" y="367.5" font-size="11.5" text-anchor="middle" transform="rotate(-45 363.5 363.5)" fill="#666">лицо: мешковина</text>
+<g fill="none" stroke="#8a8a8a"><path d="M150 110H444M150 104V116M444 104V116"/><path d="M150 82H493.5M150 76V88M493.5 76V88"/><path d="M444 116V134M493.5 88V199.5" stroke-dasharray="3 3"/><path d="M150 511.5H199.5M150 505.5V517.5M199.5 505.5V517.5"/><path d="M199.5 493.5V505.5" stroke-dasharray="3 3"/></g>
+<text x="297.0" y="103.0" font-size="11.5" text-anchor="middle" fill="#1a1a1a">42 см: тут плита касается стены</text>
+<text x="321.7" y="75.0" font-size="11.5" text-anchor="middle" fill="#1a1a1a">49 см: дальше ловушка не заходит</text>
+<text x="174.7" y="533.5" font-size="11.5" text-anchor="middle" fill="#1a1a1a">7 см</text>
+<text x="548.0" y="236.0" font-size="11.5" fill="#1a1a1a">Плита под 45° к обеим стенам.</text>
+<text x="548.0" y="262.0" font-size="11.5" fill="#1a1a1a">Так во всех четырёх углах,</text>
+<text x="548.0" y="278.0" font-size="11.5" fill="#1a1a1a">по высоте — до потолка.</text>
+<text x="548.0" y="304.0" font-size="11.5" fill="#1a1a1a">Крепление: уголки к обеим</text>
+<text x="548.0" y="320.0" font-size="11.5" fill="#1a1a1a">стенам сверху и снизу.</text>
+<text x="548.0" y="346.0" font-size="11.5" fill="#1a1a1a">За плитой ничего не ставить</text>
+<text x="548.0" y="362.0" font-size="11.5" fill="#1a1a1a">и не зашивать.</text>
+</svg>
