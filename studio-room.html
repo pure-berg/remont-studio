@@ -420,7 +420,7 @@ html.fs-on,html.fs-on body{overflow:hidden}
 (function(){
 'use strict';
 const T = THREE;
-const KEY = 'studio-room-5980-v5';
+const KEY = 'studio-room-5980-v6';
 const $ = s => document.querySelector(s);
 const cm = v => Math.round(v * 100);
 const rub = n => n.toLocaleString('ru-RU') + ' ₽';
@@ -455,7 +455,7 @@ function defaultItems(S){ return {
   pR:{wall:'R', s:0.83, y:1.20, vis:true},
   pB1:{wall:'B', s:1.45, y:1.55, vis:true},
   pB2:{wall:'B', s:2.12, y:1.55, vis:true},
-  cloud:{x:S.W/2, z:0.80, rot:0, vis:true},
+  cloud:{x:S.W/2, z:1.10, rot:0, vis:true},
   sofa:{x:SOFA_D/2, z:3.30, rot:1, vis:true},
   tv:{x:S.W-0.15, z:3.30, rot:3, vis:true},
   rug:{x:S.W/2, z:3.30, rot:0, vis:true},
@@ -1060,6 +1060,12 @@ function computeChecks(R){
         const along = (p.wall === 'L' || p.wall === 'R') ? Math.abs(p.s - c.z) : Math.abs(p.s - c.x);
         if (along - w < TRAP_REACH) pt.push(`${SPEC[id].name.toLowerCase()}: заходит на ${cm(TRAP_REACH - (along - w))} см`); }); });
     if (pt.length) out.push({t:'Панель и угловая ловушка', v:pt.length + ' шт', s:'bad', n:pt.join('; ') + '. Ловушка занимает 49 см от угла. Сдвинь панель от угла.'}); }
+  if (vis('cloud')) { const ca = aabb('cloud'), front = TRAP_W + 0.10 * Math.SQRT2, gaps = [];   // trap front face: x + z = front from its corner
+    CORNER_TRAPS.filter(vis).forEach(t => { const c = trapCorner(t), dx = c.x === 0 ? ca.x0 : S.W - ca.x1, dz = c.z === 0 ? ca.z0 : S.L - ca.z1;
+      gaps.push({t, g:(Math.max(dx, 0) + Math.max(dz, 0) - front) / Math.SQRT2}); });
+    const worst = gaps.reduce((m, x) => x.g < m.g ? x : m, {g:Infinity}), bad = gaps.filter(x => x.g < 0);
+    if (gaps.length) out.push({t:'Облако и угловые ловушки', v:bad.length ? `заходит в ${bad.length} шт на ${cm(-worst.g)} см` : `зазор ${cm(worst.g)} см`, s:bad.length ? 'bad' : worst.g < 0.03 ? 'warn' : 'ok',
+      n:bad.length ? 'Ловушки идут до потолка, облако висит в 10 см под ним. Сдвинь облако от угла.' : `Ближе всего: ${SPEC[worst.t].name.toLowerCase()}. Облако висит в 10 см под потолком, ловушка идёт до потолка.`}); }
 
   if (vis('blind')) {
     const b = blindGeom(), short = b.need - b.l, sz = `${cm(b.w)} × ${cm(b.l)}`;
